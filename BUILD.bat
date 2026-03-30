@@ -20,7 +20,7 @@ echo.
 REM ── Step 1: Install dependencies ─────────────────────────────────────────
 echo [1/3] Installing Python dependencies...
 python -m pip install --upgrade pip --quiet
-python -m pip install watchdog plyer pystray Pillow pyinstaller --quiet
+python -m pip install watchdog plyer pystray Pillow pyinstaller winotify --quiet
 if %errorlevel% neq 0 (
     echo ERROR: pip install failed. Check your internet connection.
     pause & exit /b 1
@@ -48,9 +48,9 @@ if exist "compressor.spec"    del /q "compressor.spec"
 
 REM Single build run
 if exist "icon.png" (
-    python -m PyInstaller --onefile --windowed --name compressor --icon "icon.png" --add-data "config.json;." --add-data "icon.png;." --hidden-import "plyer.platforms.win.notification" --hidden-import "pystray._win32" --hidden-import "PIL._tkinter_finder" --hidden-import "watchdog.observers.winapi" compressor.py
+    python -m PyInstaller --onefile --windowed --name compressor --icon "icon.png" --add-data "config.json;." --add-data "icon.png;." --hidden-import "plyer.platforms.win.notification" --hidden-import "pystray._win32" --hidden-import "PIL._tkinter_finder" --hidden-import "watchdog.observers.winapi" --hidden-import "winotify" compressor.py
 ) else (
-    python -m PyInstaller --onefile --windowed --name compressor --add-data "config.json;." --hidden-import "plyer.platforms.win.notification" --hidden-import "pystray._win32" --hidden-import "PIL._tkinter_finder" --hidden-import "watchdog.observers.winapi" compressor.py
+    python -m PyInstaller --onefile --windowed --name compressor --add-data "config.json;." --hidden-import "plyer.platforms.win.notification" --hidden-import "pystray._win32" --hidden-import "PIL._tkinter_finder" --hidden-import "watchdog.observers.winapi" --hidden-import "winotify" compressor.py
 )
 
 if %errorlevel% neq 0 (

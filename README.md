@@ -10,7 +10,7 @@ A background PDF auto-compressor for Windows. Watches your Downloads folder and 
 New PDF detected in Downloads
         │
         ▼
-Wait until download is complete (file size stable for 5 sec)
+Wait until download is complete (file size stable for 2 sec)
         │
         ▼
 Already under 100 KB? → SKIP

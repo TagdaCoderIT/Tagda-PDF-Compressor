@@ -33,6 +33,12 @@ try:
 except ImportError:
     HAS_PLYER = False
 
+try:
+    from winotify import Notification as WinNotification
+    HAS_WINOTIFY = True
+except ImportError:
+    HAS_WINOTIFY = False
+
 # ── Global shared state ───────────────────────────────────────────────────────
 paused_event = threading.Event()
 paused_event.set()          # set = running; clear = paused
@@ -244,6 +250,20 @@ def send_notification(title: str, message: str):
     if not config.get("notification", True):
         return
     logging.info(f"NOTIFY: {title} — {message}")
+    # winotify sets the proper Windows app name (shows "Tagda PDF Compressor" not "Python")
+    if HAS_WINOTIFY:
+        try:
+            toast = WinNotification(
+                app_id="Tagda PDF Compressor",
+                title=title,
+                msg=message,
+                duration="short",
+            )
+            toast.show()
+            return
+        except Exception as exc:
+            logging.debug(f"winotify notification failed: {exc}")
+    # Fallback: plyer
     if HAS_PLYER:
         try:
             plyer_notification.notify(
@@ -255,12 +275,6 @@ def send_notification(title: str, message: str):
             return
         except Exception as exc:
             logging.debug(f"plyer notification failed: {exc}")
-    # Fallback: Windows balloon tip via ctypes (works without plyer)
-    try:
-        import ctypes
-        ctypes.windll.user32.MessageBeep(0)
-    except Exception:
-        pass
 
 
 # ─────────────────────────────────────────────────────────────────────────────

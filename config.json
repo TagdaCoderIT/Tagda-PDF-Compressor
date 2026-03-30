@@ -1,8 +1,8 @@
 {
     "watch_folder": "%USERPROFILE%\\Downloads",
-    "max_size_kb": 1024,
-    "min_size_kb": 200,
-    "wait_seconds": 5,
+    "max_size_kb": 200 ,
+    "min_size_kb": 100,
+    "wait_seconds": 2,
     "notification": true,
     "log_file": "compressor.log"
 }
