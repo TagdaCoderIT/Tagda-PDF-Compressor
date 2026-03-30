@@ -43,7 +43,7 @@ Before using this project, install the following on your PC:
 ### 3. Python packages
 Run this once in Command Prompt:
 ```
-pip install watchdog plyer pystray Pillow pyinstaller
+pip install watchdog plyer pystray Pillow pyinstaller winotify
 ```
 
 ---
@@ -72,7 +72,7 @@ If you already downloaded `gs10070w64.exe`, just double-click it to install.
 ### Step 2 — Install Python packages
 Open Command Prompt in the project folder and run:
 ```
-pip install watchdog plyer pystray Pillow
+pip install watchdog plyer pystray Pillow winotify
 ```
 
 ### Step 3 — Run it
@@ -208,7 +208,7 @@ TagdaPDF-Compressor/
 → Run `install_gs.bat` as Administrator, then restart the compressor.
 
 **CMD window opens and closes but no tray icon**
-→ Check `compressor.log` for errors. Usually means a missing Python package — run `pip install watchdog plyer pystray Pillow`.
+→ Check `compressor.log` for errors. Usually means a missing Python package — run `pip install watchdog plyer pystray Pillow winotify`.
 
 **PDF not being compressed**
 → Check that the PDF is larger than `min_size_kb` (default 100 KB) in `config.json`.

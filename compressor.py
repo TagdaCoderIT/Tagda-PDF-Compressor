@@ -658,7 +658,7 @@ def main():
         logging.info(f"Watching: {watch_dir}")
     else:
         logging.critical(
-            "watchdog not installed. Run: pip install watchdog plyer pystray Pillow"
+            "watchdog not installed. Run: pip install watchdog plyer pystray Pillow winotify"
         )
 
     # ── 8. System tray (blocks main thread) ───────────────────────────────────
