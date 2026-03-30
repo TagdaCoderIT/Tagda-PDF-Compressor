@@ -6,127 +6,96 @@ echo   Ghostscript Auto-Installer for PDF Compressor
 echo ============================================================
 echo.
 
-REM ── Check: already in PATH ───────────────────────────────────────────────
+REM ── Already in PATH? ─────────────────────────────────────────────────────
 where gswin64c >nul 2>&1
 if %errorlevel% == 0 (
-    echo Ghostscript already in PATH:
+    echo Ghostscript already installed:
     gswin64c --version
-    goto :already_done
+    goto :done
 )
 where gswin32c >nul 2>&1
 if %errorlevel% == 0 (
-    echo Ghostscript (32-bit) already in PATH:
+    echo Ghostscript ^(32-bit^) already installed:
     gswin32c --version
-    goto :already_done
+    goto :done
 )
 
-REM ── Check: portable copy next to this script ─────────────────────────────
+REM ── Portable copy next to script? ────────────────────────────────────────
 if exist "%~dp0gs\bin\gswin64c.exe" (
     echo Local portable Ghostscript found at gs\bin\gswin64c.exe
-    gs\bin\gswin64c --version
-    goto :already_done
+    goto :done
 )
 
-REM ── Check: registry (installed but not in PATH) ───────────────────────────
+REM ── Already installed (registry)? ────────────────────────────────────────
 reg query "HKLM\SOFTWARE\GPL Ghostscript" >nul 2>&1
 if %errorlevel% == 0 (
-    echo Ghostscript found in Windows registry but not on PATH.
-    echo To fix: open System Properties ^> Environment Variables
-    echo         and add the Ghostscript bin folder to PATH.
-    echo         (Usually C:\Program Files\gs\gs*\bin)
-    goto :already_done
+    echo Ghostscript is installed ^(found in registry^).
+    echo It will be detected automatically by PDF Compressor.
+    goto :done
 )
 
-REM ── Not found -- download and install ────────────────────────────────────
-echo Ghostscript not found. Downloading installer...
+REM ── Download and install ──────────────────────────────────────────────────
+echo Ghostscript not found. Downloading now...
 echo.
 
-set GS_VER=10.03.1
-set GS_VER_NODOT=10031
+set GS_VER=10.07.0
+set GS_VER_NODOT=10070
 set GS_EXE=gs%GS_VER_NODOT%w64.exe
 set GS_URL=https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs%GS_VER_NODOT%/%GS_EXE%
 set GS_TMP=%TEMP%\%GS_EXE%
 
 echo Version : %GS_VER%
 echo File    : %GS_EXE%
-echo Source  : %GS_URL%
 echo.
-echo Downloading... (this may take a minute)
-echo.
+echo Downloading... (may take a minute)
 
-REM Use PowerShell to download with TLS 1.2
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; " ^
-    "try { " ^
-    "  Invoke-WebRequest -Uri '%GS_URL%' -OutFile '%GS_TMP%' -UseBasicParsing; " ^
-    "  Write-Host 'Download complete.'; " ^
-    "} catch { " ^
-    "  Write-Host ('ERROR: ' + $_.Exception.Message); exit 1 " ^
-    "}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%GS_URL%' -OutFile '%GS_TMP%' -UseBasicParsing"
 
 if not exist "%GS_TMP%" (
     echo.
     echo ERROR: Download failed.
-    echo Please download manually from:
-    echo   https://www.ghostscript.com/releases/gsdnld.html
-    echo Then run the installer.
+    echo.
+    echo Please download manually:
+    echo   https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10070/gs10070w64.exe
+    echo Then double-click to install, then restart PDF Compressor.
     pause & exit /b 1
 )
 
-echo.
-echo Running silent installer (requires administrator privileges)...
+echo Download complete. Installing silently ^(needs admin rights^)...
 echo.
 
-REM NSIS-based installer supports /S for silent install
 "%GS_TMP%" /S
 
 if %errorlevel% neq 0 (
-    echo.
-    echo Silent install returned an error. Launching interactive installer...
+    echo Silent install failed. Opening interactive installer...
     "%GS_TMP%"
 )
 
-REM Clean up installer file
 del "%GS_TMP%" >nul 2>&1
 
 echo.
-echo Verifying installation...
-echo.
+echo Verifying...
 
-REM Refresh PATH for this session by checking common install locations
-set FOUND_GS=0
+set FOUND=0
 for /d %%V in ("C:\Program Files\gs\gs*") do (
     if exist "%%V\bin\gswin64c.exe" (
         echo SUCCESS: Ghostscript installed at %%V\bin\
         "%%V\bin\gswin64c.exe" --version
-        set FOUND_GS=1
-        goto :verify_done
-    )
-)
-:verify_done
-
-if "%FOUND_GS%"=="0" (
-    where gswin64c >nul 2>&1
-    if %errorlevel% == 0 (
-        echo SUCCESS: Ghostscript now on PATH.
-        gswin64c --version
-        set FOUND_GS=1
+        set FOUND=1
     )
 )
 
-if "%FOUND_GS%"=="0" (
-    echo.
-    echo Ghostscript appears to have installed, but the exe was not found in
-    echo common locations. You may need to restart your PC so PATH is refreshed.
-    echo.
-    echo The PDF Compressor will still find it via the Windows registry automatically.
+if "%FOUND%"=="0" (
+    echo Installed but not yet on PATH.
+    echo Restart your PC or reopen CMD to refresh PATH.
+    echo PDF Compressor will still find it via registry automatically.
 )
 
 goto :end
 
-:already_done
+:done
 echo.
-echo Ghostscript is already available -- no action needed.
+echo Ghostscript is ready. No action needed.
 
 :end
 echo.
