@@ -1,0 +1,23 @@
+# Build outputs
+build/
+dist/
+*.spec
+
+# Runtime generated files
+compressor.log
+compressor.log.*
+icon.png
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# OS files
+Thumbs.db
+desktop.ini
