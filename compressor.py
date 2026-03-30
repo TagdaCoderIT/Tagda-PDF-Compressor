@@ -75,7 +75,7 @@ DEFAULTS = {
     "watch_folder": os.path.expandvars("%USERPROFILE%\\Downloads"),
     "max_size_kb": 200,
     "min_size_kb": 100,
-    "wait_seconds": 3,
+    "wait_seconds": 2,
     "notification": True,
     "log_file": "compressor.log",
 }
@@ -249,7 +249,7 @@ def send_notification(title: str, message: str):
             plyer_notification.notify(
                 title=title,
                 message=message,
-                app_name="PDF Compressor",
+                app_name="Tagda PDF Compressor",
                 timeout=6,
             )
             return
@@ -581,9 +581,9 @@ def setup_tray(icon_path: Path) -> "pystray.Icon":
         img = Image.new("RGB", (64, 64), color=(200, 45, 45))
 
     icon = pystray.Icon(
-        name="PDF Compressor",
+        name="Tagda PDF Compressor",
         icon=img,
-        title="PDF Compressor",
+        title="Tagda PDF Compressor",
         menu=make_menu(),
     )
     return icon
@@ -602,7 +602,7 @@ def main():
     # ── 2. Logging ────────────────────────────────────────────────────────────
     setup_logging(config["log_file"])
     logging.info("=" * 60)
-    logging.info("PDF Compressor starting")
+    logging.info("Tagda PDF Compressor starting")
     logging.info(f"  Watch folder : {config['watch_folder']}")
     logging.info(f"  Skip below   : {config['min_size_kb']} KB")
     logging.info(f"  Target max   : {config['max_size_kb']} KB")
@@ -621,7 +621,7 @@ def main():
             "Run install_gs.bat to install it."
         )
         send_notification(
-            "PDF Compressor",
+            "Tagda PDF Compressor",
             "Ghostscript not found — compression disabled. Run install_gs.bat.",
         )
     else:
@@ -650,7 +650,7 @@ def main():
     # ── 8. System tray (blocks main thread) ───────────────────────────────────
     if HAS_TRAY:
         tray_icon = setup_tray(icon_path)
-        logging.info("PDF Compressor running. Right-click tray icon to pause/quit.")
+        logging.info("Tagda PDF Compressor running. Right-click tray icon to pause/quit.")
         tray_icon.run()     # ← BLOCKS until _quit_app calls icon.stop()
     else:
         # Fallback: no tray — just keep the main thread alive
@@ -669,7 +669,7 @@ def main():
         observer.stop()
         observer.join(timeout=5)
     executor.shutdown(wait=False)
-    logging.info("PDF Compressor stopped cleanly.")
+    logging.info("Tagda PDF Compressor stopped cleanly.")
     sys.exit(0)
 
 

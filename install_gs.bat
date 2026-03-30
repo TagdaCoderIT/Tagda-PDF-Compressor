@@ -1,8 +1,8 @@
 @echo off
-title Ghostscript Installer for PDF Compressor
+title Ghostscript Installer for Tagda PDF Compressor
 cd /d "%~dp0"
 echo ============================================================
-echo   Ghostscript Auto-Installer for PDF Compressor
+echo   Ghostscript Auto-Installer for Tagda PDF Compressor
 echo ============================================================
 echo.
 
@@ -30,7 +30,7 @@ REM ── Already installed (registry)? ─────────────
 reg query "HKLM\SOFTWARE\GPL Ghostscript" >nul 2>&1
 if %errorlevel% == 0 (
     echo Ghostscript is installed ^(found in registry^).
-    echo It will be detected automatically by PDF Compressor.
+    echo It will be detected automatically by Tagda PDF Compressor.
     goto :done
 )
 
@@ -88,7 +88,7 @@ for /d %%V in ("C:\Program Files\gs\gs*") do (
 if "%FOUND%"=="0" (
     echo Installed but not yet on PATH.
     echo Restart your PC or reopen CMD to refresh PATH.
-    echo PDF Compressor will still find it via registry automatically.
+    echo Tagda PDF Compressor will still find it via registry automatically.
 )
 
 goto :end

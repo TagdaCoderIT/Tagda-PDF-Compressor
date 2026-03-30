@@ -1,8 +1,8 @@
 @echo off
-title PDF Compressor - Build to .exe
+title Tagda PDF Compressor - Build to .exe
 cd /d "%~dp0"
 echo ============================================================
-echo   PDF Compressor -- PyInstaller Build Script
+echo   Tagda PDF Compressor -- PyInstaller Build Script
 echo ============================================================
 echo.
 
